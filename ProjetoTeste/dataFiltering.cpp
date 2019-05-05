@@ -14,7 +14,6 @@ double myData = 0;
 vector <double> myDataVect;
 
 
-//A ideia é fazer com que essa função faça os cálculos e executá-la no main
 //Foi criado um arquivo .txt a partir dos dados fornecidos que exclue os valores de tempo para facilitar o trabalho com os dados
 void modulation()
 {
@@ -35,19 +34,6 @@ void modulation()
 		arquivof << (myDataVect.at(i) * 2.0) << "\n";
 	}
 
-	//Tentativa inicial, agora aperfeiçoada com o vector de dados.
-	/*
-	double item;
-	
-	//Lê a lista de dados até o final, multiplicando cada valor por 2 e armazenando em um novo arquivo .log
-	while (!dados.eof()) {
-
-		dados >> item;
-		item = item * 2.0;
-
-		arquivof << item << "\n";
-	}
-	*/
 	arquivof.close();
 	cout << "Seu arquivo modulation.log foi criado com sucesso!" << endl;
 }
@@ -90,10 +76,44 @@ void mean()
 }
 
 
+void lowpass() 
+{
+	dados.open("dados.txt");
+	arquivof.open("lowpass.log");
+
+	//Criação de um vetor com os dados contidos no arquivo dados.txt
+	double myData;
+	vector <double> myDataVect;
+
+	while (!dados.eof()) {
+		dados >> myData;
+		myDataVect.insert(myDataVect.end(), myData);
+	}
+
+	//Implementação do filtro passa baixa. 
+	float tau = 0.1;
+	float T = 0.02; 
+
+	float alpha = T / (2 * tau + T);
+	float beta = (T - 2 * tau) / (T + 2 * tau);
+
+	double y = 0;
+
+	for (int k = 1; k < myDataVect.size(); k++) {
+
+		y = alpha*(myDataVect.at(k) + myDataVect.at(k - 1)) - beta*y;
+		//cout << "Meu y: " << y << endl;
+		arquivof << y << "\n";
+	}
+	arquivof.close();
+	cout << "Seu arquivo lowpass.log foi criado com sucesso!" << endl;
+}
+
 int main()
 {
 	//modulation();
-	mean();
+	//mean();
+	lowpass();
 	cin.get();
 
 }
