@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="modulation.cpp" />
+    <ClCompile Include="dataFiltering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dados.txt" />
