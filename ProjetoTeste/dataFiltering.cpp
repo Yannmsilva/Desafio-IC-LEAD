@@ -1,4 +1,7 @@
 //Código para trabalhar o sinal sensor.log
+
+//Foi criado um arquivo .txt a partir dos dados fornecidos que exclue os valores de tempo para facilitar o trabalho com os dados
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -7,19 +10,14 @@
 
 using namespace std;
 
-ifstream dados;
-ofstream arquivof; 
-
-double myData = 0;
-vector <double> myDataVect;
-
-
-//Foi criado um arquivo .txt a partir dos dados fornecidos que exclue os valores de tempo para facilitar o trabalho com os dados
 void modulation()
 {
+	//Recuperação dos dados
+	ifstream dados;
+	ofstream arquivo1;
 	dados.open("dados.txt");
-	arquivof.open("modulation.log");
-	
+	arquivo1.open("modulation.log");
+
 	//Criação de um vetor com os dados contidos no arquivo dados.txt
 	double myData;
 	vector <double> myDataVect;
@@ -29,20 +27,26 @@ void modulation()
 		myDataVect.insert(myDataVect.end(), myData);
 	}
 
+	//Variável para adicionar os timestamps ao arquivo de dados
+	double t = 2.40;
+
 	//Loop para trabalhar os dados usando o vetor de dados 
 	for (int i = 0; i < (myDataVect.size()); i++) {
-		arquivof << (myDataVect.at(i) * 2.0) << "\n";
+		arquivo1 << t << " ";
+		arquivo1 << (myDataVect.at(i) * 2.0) << "\n";
+		t = t + 0.02;
 	}
-
-	arquivof.close();
-	cout << "Seu arquivo modulation.log foi criado com sucesso!" << endl;
+	arquivo1.close();
 }
 
 
 void mean() 
-{
+{	
+	//Recuperação dos dados
+	ifstream dados;
+	ofstream arquivo2;
 	dados.open("dados.txt");
-	arquivof.open("mean.log");
+	arquivo2.open("mean.log");
 
 	//Criação de um vetor com os dados contidos no arquivo dados.txt
 	double myData;
@@ -52,6 +56,8 @@ void mean()
 		dados >> myData;
 		myDataVect.insert(myDataVect.end(), myData);
 	}
+	//Variável para adicionar os timestamps ao arquivo de dados
+	double t = 2.40;
 
 	//Loop para trabalhar os dados usando o vetor de dados 
 	double a = 0;
@@ -63,23 +69,29 @@ void mean()
 		}
 		else if (i == 20) {
 			b = (a / 20);
-			arquivof << b << "\n";
+			arquivo2 << t << " ";
+			arquivo2 << b << "\n";
+			t = t + 0.02;
 		}
 		else if (i > 20) {
 			a = a + myDataVect.at(i) - myDataVect.at(i - 21);
 			b = (a / 20);
-			arquivof << b << "\n";
+			arquivo2 << t << " ";
+			arquivo2 << b << "\n";
+			t = t + 0.02;
 		}
 	}
-	arquivof.close();
-	cout << "Seu arquivo mean.log foi criado com sucesso!" << endl;
+	arquivo2.close();
 }
 
 
 void lowpass() 
 {
+	//Recuperação dos dados
+	ifstream dados;
+	ofstream arquivo3;
 	dados.open("dados.txt");
-	arquivof.open("lowpass.log");
+	arquivo3.open("lowpass.log");
 
 	//Criação de um vetor com os dados contidos no arquivo dados.txt
 	double myData;
@@ -89,32 +101,33 @@ void lowpass()
 		dados >> myData;
 		myDataVect.insert(myDataVect.end(), myData);
 	}
+	//Variável para adicionar os timestamps ao arquivo de dados
+	double t = 2.40;
 
 	//Implementação do filtro passa baixa. 
-	float tau = 0.1;
-	float T = 0.02; 
+	double tau = 0.1;
+	double T = 0.02; 
 
-	float alpha = T / (2 * tau + T);
-	float beta = (T - 2 * tau) / (T + 2 * tau);
+	double alpha = T / (2 * tau + T);
+	double beta = (T - 2 * tau) / (T + 2 * tau);
 
 	double y = 0;
 
 	for (int k = 1; k < myDataVect.size(); k++) {
-
-		y = alpha*(myDataVect.at(k) + myDataVect.at(k - 1)) - beta*y;
-		//cout << "Meu y: " << y << endl;
-		arquivof << y << "\n";
+		y = alpha * (myDataVect.at(k) + myDataVect.at(k - 1)) - beta*y;
+		arquivo3 << t << " ";
+		arquivo3 << y << "\n";
+		t = t + 0.02;
 	}
-	arquivof.close();
-	cout << "Seu arquivo lowpass.log foi criado com sucesso!" << endl;
+	arquivo3.close();
 }
 
 int main()
 {
-	//modulation();
-	//mean();
+	
+	modulation();
+	mean();
 	lowpass();
-	cin.get();
 
 }
 
