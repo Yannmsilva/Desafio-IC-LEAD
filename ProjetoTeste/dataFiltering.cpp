@@ -1,12 +1,11 @@
 //Código para trabalhar o sinal sensor.log
 
-//Foi criado um arquivo .txt a partir dos dados fornecidos que exclue os valores de tempo para facilitar o trabalho com os dados
+//Foi criado um arquivo dados.txt a partir dos dados fornecidos que exclue os valores de tempo para facilitar o trabalho com os dados
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <Windows.h>
 
 using namespace std;
 
@@ -121,6 +120,7 @@ void lowpass()
 	}
 	arquivo3.close();
 }
+
 
 int main()
 {
